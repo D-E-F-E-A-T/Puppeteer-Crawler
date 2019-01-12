@@ -4,15 +4,15 @@ const fs = require('fs');
 
 const URL = 'http://botbenchmarking.com/indexing_experiment/indexing_html.html'
 
-
 const output = `${__dirname}/output`
 const path_Coverage_List = `${__dirname}/output/Coverage_Detail_List`;
 const path_Features_List = `${__dirname}/output/Features_Detail_List`;
 
+const path_Features_Listt = `${__dirname}/output/Features_Detail_Listt`;
 const create_Output = async () => {
     await mkdirSync(output)
 }
-create_Output()
+create_Output() //just we need output on start :)
 
 const FILE = `${__dirname}/output/result.csv`;
 const exporter = new CSVExporter({
@@ -26,12 +26,9 @@ const exporter = new CSVExporter({
   await mkdirSync(path_Features_List)
 
   const crawler = await HCCrawler.launch({
-    evaluatePage: (() => ({
-      title: $('title').text(),
-    })),
-    onSuccess: (result => {
-     console.log(result.links);
-    }),
+    onSuccess: async (result) => {
+      console.log( result.response.url)
+    },
     maxDepth: 4,
     exporter
   });
@@ -41,7 +38,6 @@ const exporter = new CSVExporter({
   await crawler.onIdle();
   await crawler.close();
 })();
-
 
 
 async function mkdirSync(dirPath) {
@@ -54,7 +50,7 @@ async function mkdirSync(dirPath) {
         return currentPath + '/';
       }, '');
     } catch (err) {
-      if (err.code !== 'EEXIST') {
+      if (err.name !== 'EEXIST') {
         throw err;
       }
     }
