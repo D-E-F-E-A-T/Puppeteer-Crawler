@@ -1,9 +1,9 @@
 const HCCrawler = require('headless-chrome-crawler');
-const CSVExporter = require('headless-chrome-crawler/exporter/csv');
+//const CSVExporter = require('headless-chrome-crawler/exporter/csv');
 const fs = require('fs');
 const stringify = require("csv-stringify");
 
-const URL = 'http://www.wp.pl'
+const URL = 'http://www.onet.pl'
 
 const output = `${__dirname}/output`
 const path_Coverage_List = `${__dirname}/output/Coverage_Detail_List`;
@@ -20,28 +20,6 @@ let data = []
 let columns = {
   URL: 'URL'
 };
-
-(async () => {
-
-  await mkdirSync(path_Coverage_List)
-  await mkdirSync(path_Features_List)
-
-  const crawler = await HCCrawler.launch({
-    onSuccess: async (result) => {
-      console.log(result.response.url)
-      data.push([result.response.url]);
-      await createStringify(FILE, data)
-    
-    },
-    maxDepth: 2,
-  });
-
-  crawler.queue(URL);
-// crawler.queue('http://www.wp.pl');
-  await crawler.onIdle();
-  await crawler.close();
-})();
-
 
 async function mkdirSync(dirPath) {
     try {
@@ -68,3 +46,45 @@ async function createStringify(FILE, data)  {
     })
   })
 }
+
+(async () => {
+
+  await mkdirSync(path_Coverage_List)
+  await mkdirSync(path_Features_List)
+
+  const crawler = await HCCrawler.launch({
+
+      customCrawl: async (page, crawl) => {
+
+      const result = await crawl();
+      
+      result.evaluatet = await page.evaluate(() => {
+        let title = document.querySelector('h1').textContent;
+
+          return {
+              title
+          }
+    });
+
+      return result;
+     
+    },
+    
+    onSuccess: async (result) => {
+      console.log(result.response.url)
+     // console.log(result.page)
+     console.log(result.evaluatet)
+      data.push([result.response.url]);
+      await createStringify(FILE, data)
+    
+    },
+    maxDepth: 2,
+    maxConcurrency: 1
+  });
+
+  crawler.queue(URL);
+// crawler.queue('http://www.wp.pl');
+  await crawler.onIdle();
+  await crawler.close();
+})();
+
