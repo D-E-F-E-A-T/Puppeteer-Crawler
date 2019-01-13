@@ -11,6 +11,7 @@ const path_Coverage_List = `${output}/Coverage_Detail_List`;
 const path_Features_List = `${output}/Features_Detail_List`;
 
 const createStringify = require('./modules/stringify.js').createStringify;
+const coverageDetails = require('./modules/coverage.js').runCoverage;
 
  async function create_Output () {
     await mkdirSync(output)
@@ -97,18 +98,18 @@ async function mkdirSync(dirPath) {
       console.log(result.response.url)
      // console.log(result.evaluate)
       data.push([
-        result.response.url,
+        result.response.url.trim(),
         result.response.status,
-        result.evaluate.title,
-        result.evaluate.h1,
-        result.evaluate.h2,
-        result.evaluate.h3,
-        result.evaluate.Canonical,
-        result.evaluate.MetaRobots,
-        result.evaluate.MetaDescription,     
+        result.evaluate.title.trim(),
+        result.evaluate.h1.trim(),
+        result.evaluate.h2.trim(),
+        result.evaluate.h3.trim(),
+        result.evaluate.Canonical.trim(),
+        result.evaluate.MetaRobots.trim(),
+        result.evaluate.MetaDescription.trim(),     
       ]);
      await createStringify(FILE, data, columns)
-    
+    await coverageDetails(result.response.url, path_Coverage_List, output)
     },
     maxDepth: 3,
     maxConcurrency: 2

@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const chalk = require('chalk');
 const Table = require('cli-table');
 
-const URL = process.env.URL || 'https://www.chromestatus.com/features';
+//const URL = process.env.URL || 'https://www.chromestatus.com/features';
 
 const stringify = require('csv-stringify');
 
@@ -130,8 +130,8 @@ async function collectCoverage(URL) {
   return browser.close();
 }
 
-const runCoverage = async(URL, path_Details) => {
-  console.log(path_Details)
+const runCoverage = async(URL, path_Details, output) => {
+
   await collectCoverage(URL);
 
   let data = []
@@ -163,8 +163,7 @@ const runCoverage = async(URL, path_Details) => {
     });
 
 
-    let randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-    let uniqid = randLetter + Date.now();
+ 
 
     EVENTS.forEach(event => {
       const usageForEvent = vals.filter(val => val.eventType === event);
@@ -206,34 +205,49 @@ const runCoverage = async(URL, path_Details) => {
     });
 
     //console.log(table.toString()); ///////////////TABLE///////////////////////// 2
-  }
+    }
 
-  // Print total usage for each event.
-  // console.log('\n');
-  EVENTS.forEach(event => {
-    let totalBytes = 0;
-    let totalUsedBytes = 0;
 
-    const metrics = Array.from(stats.values());
-    const statsForEvent = metrics.map(eventStatsForUrl => {
-      const statsForEvent = eventStatsForUrl.filter(stat => stat.eventType === event)[0];
-      // TODO: need to sum max totalBytes. Currently ignores stats if event didn't
-      // have an entry. IOW, all total numerators should be max totalBytes seen for that event.
-      if (statsForEvent) {
-        totalBytes += statsForEvent.totalBytes;
-        totalUsedBytes += statsForEvent.usedBytes;
-      }
+    let mainData = [];
+    let columns2 = {
+      ID: 'ID',
+      Event: 'Event',
+      TotalUsed: 'TotalUsed',
+      PercentUsed: 'Percent Used',
+      url: 'Url'
+     };
+  
+     let randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+     let uniqid = randLetter + Date.now();
+
+    EVENTS.forEach(event => {
+      let totalBytes = 0;
+      let totalUsedBytes = 0;
+
+      const metrics = Array.from(stats.values());
+      const statsForEvent = metrics.map(eventStatsForUrl => {
+        const statsForEvent = eventStatsForUrl.filter(stat => stat.eventType === event)[0];
+        // TODO: need to sum max totalBytes. Currently ignores stats if event didn't
+        // have an entry. IOW, all total numerators should be max totalBytes seen for that event.
+        if (statsForEvent) {
+          totalBytes += statsForEvent.totalBytes;
+          totalUsedBytes += statsForEvent.usedBytes;
+        }
+      });
+
+      const percentUsed = Math.round(totalUsedBytes / totalBytes * 100);
+
+    // console.log(`Total used @ ${chalk.magenta(event)}: ${formatBytesToKB(totalUsedBytes)}/${formatBytesToKB(totalBytes)} (${percentUsed}%)`);
+      ///////////////Total used//////////////////////////////////////////////////////// 3
+
+    
+      mainData.push([uniqid, event, ` ${formatBytesToKB(totalUsedBytes)}/${formatBytesToKB(totalBytes)}`, `${percentUsed}%`, URL])
     });
 
-    const percentUsed = Math.round(totalUsedBytes / totalBytes * 100);
-
-  // console.log(`Total used @ ${chalk.magenta(event)}: ${formatBytesToKB(totalUsedBytes)}/${formatBytesToKB(totalBytes)} (${percentUsed}%)`);
-    ///////////////Total used//////////////////////////////////////////////////////// 3
-    
-  });
-
- // myFunction.createStringify(`${path_Details}/coverage_List.csv`, data, columns);
-
+  myFunction.createStringify(`${path_Details}/coverage_List.csv`, data, columns);
+  data = []
+console.log(data)
+  myFunction.createStringify(`${output}/coverage_CSS_JS.csv`, mainData, columns2);
 
   
 
