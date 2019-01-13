@@ -1,24 +1,25 @@
 const HCCrawler = require('headless-chrome-crawler');
 const CSVExporter = require('headless-chrome-crawler/exporter/csv');
 const fs = require('fs');
+const stringify = require("csv-stringify");
 
-const URL = 'http://botbenchmarking.com/indexing_experiment/indexing_html.html'
+const URL = 'http://www.wp.pl'
 
 const output = `${__dirname}/output`
 const path_Coverage_List = `${__dirname}/output/Coverage_Detail_List`;
 const path_Features_List = `${__dirname}/output/Features_Detail_List`;
 
-const path_Features_Listt = `${__dirname}/output/Features_Detail_Listt`;
 const create_Output = async () => {
     await mkdirSync(output)
 }
 create_Output() //just we need output on start :)
 
-const FILE = `${__dirname}/output/result.csv`;
-const exporter = new CSVExporter({
-  file: FILE,
-  fields: ['response.url', 'response.status', 'links.length'],
-});
+const FILE = `${__dirname}/output/result2.csv`;
+
+let data = []
+let columns = {
+  URL: 'URL'
+};
 
 (async () => {
 
@@ -27,10 +28,12 @@ const exporter = new CSVExporter({
 
   const crawler = await HCCrawler.launch({
     onSuccess: async (result) => {
-      console.log( result.response.url)
+      console.log(result.response.url)
+      data.push([result.response.url]);
+      await createStringify(FILE, data)
+    
     },
-    maxDepth: 4,
-    exporter
+    maxDepth: 2,
   });
 
   crawler.queue(URL);
@@ -56,3 +59,12 @@ async function mkdirSync(dirPath) {
     }
   }
 
+
+async function createStringify(FILE, data)  {
+  stringify(data, {header: true, columns: columns}, (err, output) => {
+    if(err) throw err;
+    fs.writeFileSync(FILE, output, 'utf8', (err) => {
+      if(err) throw err;
+    })
+  })
+}
