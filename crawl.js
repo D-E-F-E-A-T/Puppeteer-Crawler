@@ -66,12 +66,6 @@ async function createStringify(FILE, data)  {
 
         return result;
 
-          return {
-              title
-          }
-    });
-      return result;
-     
     },
     
     onSuccess: async (result) => {
