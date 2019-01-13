@@ -10,6 +10,8 @@ const output = `${__dirname}/output/${strin_split(URL)}`
 const path_Coverage_List = `${output}/Coverage_Detail_List`;
 const path_Features_List = `${output}/Features_Detail_List`;
 
+const createStringify = require('./modules/stringify.js').createStringify;
+
  async function create_Output () {
     await mkdirSync(output)
 }
@@ -50,16 +52,6 @@ async function mkdirSync(dirPath) {
       }
     }
   }
-
-
-async function createStringify(FILE, data)  {
-  stringify(data, {header: true, columns: columns}, (err, output) => {
-    if(err) throw err;
-    fs.writeFileSync(FILE, output, 'utf8', (err) => {
-      if(err) throw err;
-    })
-  })
-}
 
 (async () => {
 
@@ -115,11 +107,11 @@ async function createStringify(FILE, data)  {
         result.evaluate.MetaRobots,
         result.evaluate.MetaDescription,     
       ]);
-      await createStringify(FILE, data)
+     await createStringify(FILE, data, columns)
     
     },
-    maxDepth: 2,
-    maxConcurrency: 1
+    maxDepth: 3,
+    maxConcurrency: 2
   });
 
   crawler.queue(URL);
@@ -127,4 +119,3 @@ async function createStringify(FILE, data)  {
   await crawler.onIdle();
   await crawler.close();
 })();
-

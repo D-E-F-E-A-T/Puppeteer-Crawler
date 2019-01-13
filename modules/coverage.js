@@ -4,12 +4,17 @@ const Table = require('cli-table');
 
 const URL = process.env.URL || 'https://www.chromestatus.com/features';
 
+const stringify = require('csv-stringify');
+
+const myFunction = require('./stringify');
+
 const EVENTS = [
   'domcontentloaded',
   'load',
   // 'networkidle2',
   'networkidle0',
 ];
+
 
 function formatBytesToKB(bytes) {
   if (bytes > 1024) {
@@ -27,7 +32,7 @@ class UsageFormatter {
   static eventLabel(event) {
     // const maxEventLabelLen = EVENTS.reduce((currMax, event) => Math.max(currMax, event.length), 0);
     // const eventLabel = event + ' '.repeat(maxEventLabelLen - event.length);
-    return chalk.magenta(event);
+    return  event //chalk.magenta(event); event
   }
 
   summary(used = this.stats.usedBytes, total = this.stats.totalBytes) {
@@ -87,7 +92,7 @@ function addUsage(coverage, type, eventType) {
   }
 }
 
-async function collectCoverage() {
+async function collectCoverage(URL) {
   const browser = await puppeteer.launch({headless: true});
 
   // Do separate load for each event. See
@@ -125,81 +130,113 @@ async function collectCoverage() {
   return browser.close();
 }
 
-(async() => {
+const runCoverage = async(URL, path_Details) => {
+  console.log(path_Details)
+  await collectCoverage(URL);
 
-await collectCoverage();
+  let data = []
+  let columns = {
+    EventType: 'EventType',
+    UsedBytes: 'used Bytes',
+    JsUsed: 'Js Used',
+    CssUsed: 'css Used',
+    TotalBytes: 'total Bytes',
+    URL: 'URL'
+  };
 
-for (const [url, vals] of stats) {
-  console.log('\n' + chalk.cyan(url)); ///////////////////////////4 LINKS //////////////////////////////
 
-  const table = new Table({
-    // chars: {mid: '', 'left-mid': '', 'mid-mid': '', 'right-mid': ''},
-    head: [
-      'Event',
-      `${chalk.bgRedBright(' JS ')} ${chalk.bgBlueBright(' CSS ')} % used`,
-      'JS used',
-      'CSS used',
-      'Total bytes used'
-    ],
-    // style : {compact : true, 'padding-left' : 0}
-    style: {head: ['white'], border: ['grey']}
-    // colWidths: [20, 20]
-  });
+  for (const [url, vals] of stats) {
+    console.log('\n' + chalk.cyan(url)); ///////////////////////////4 LINKS //////////////////////////////
 
-  EVENTS.forEach(event => {
-    const usageForEvent = vals.filter(val => val.eventType === event);
+    const table = new Table({
+      // chars: {mid: '', 'left-mid': '', 'mid-mid': '', 'right-mid': ''},
+      head: [
+        'Event',
+        `${chalk.bgRedBright(' JS ')} ${chalk.bgBlueBright(' CSS ')} % used`,
+        'JS used',
+        'CSS used',
+        'Total bytes used'
+      ],
+      // style : {compact : true, 'padding-left' : 0}
+      style: {head: ['white'], border: ['grey']}
+      // colWidths: [20, 20]
+    });
 
-    if (usageForEvent.length) {
-      for (const stats of usageForEvent) {
-        // totalBytes += stats.totalBytes;
-        // totalUsedBytes += stats.usedBytes;
 
-        const formatter = new UsageFormatter(stats);
-     /*   table.push([
-          UsageFormatter.eventLabel(stats.eventType),
-          formatter.barGraph(),
-          formatter.shortSummary(stats.jsUsed), // !== 0 ? `${formatBytesToKB(stats.jsUsed)}KB` : 0,
-          formatter.shortSummary(stats.cssUsed),
-          formatter.summary()
-        ]);*/
-        console.log(
-            UsageFormatter.eventLabel(stats.eventType), '|||',
-          //  formatter.barGraph(),'|||',
-            formatter.shortSummary(stats.jsUsed),'|||', // !== 0 ? `${formatBytesToKB(stats.jsUsed)}KB` : 0,
-            formatter.shortSummary(stats.cssUsed),'|||',
+    let randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+    let uniqid = randLetter + Date.now();
+
+    EVENTS.forEach(event => {
+      const usageForEvent = vals.filter(val => val.eventType === event);
+
+      if (usageForEvent.length) {
+        for (const stats of usageForEvent) {
+          // totalBytes += stats.totalBytes;
+          // totalUsedBytes += stats.usedBytes;
+
+          const formatter = new UsageFormatter(stats);
+      /*   table.push([
+            UsageFormatter.eventLabel(stats.eventType),
+            formatter.barGraph(),
+            formatter.shortSummary(stats.jsUsed), // !== 0 ? `${formatBytesToKB(stats.jsUsed)}KB` : 0,
+            formatter.shortSummary(stats.cssUsed),
             formatter.summary()
-        )
+          ]);*/
+          console.log(
+            chalk.magenta(UsageFormatter.eventLabel(stats.eventType)), '|||',
+            //  formatter.barGraph(),'|||',
+              formatter.shortSummary(stats.jsUsed),'|||', // !== 0 ? `${formatBytesToKB(stats.jsUsed)}KB` : 0,
+              formatter.shortSummary(stats.cssUsed),'|||',
+              formatter.summary()
+          )
+          data.push([
+            UsageFormatter.eventLabel(stats.eventType),
+            `${usageForEvent[0].usedBytes}`,
+            usageForEvent[0].jsUsed,
+            usageForEvent[0].cssUsed,
+            usageForEvent[0].totalBytes,
+            `  ${usageForEvent[0].url}`
+        ]);
+        }
+      } else {
+        //table.push([UsageFormatter.eventLabel(event), 'no usage found', '-', '-', '-']);
+        console.log(chalk.magenta(UsageFormatter.eventLabel(event)), 'no usage found', '-', '-', '-')
+        data.push([UsageFormatter.eventLabel(event), 'no usage found', '-', '-', '-', `${url}`]);
       }
-    } else {
-      //table.push([UsageFormatter.eventLabel(event), 'no usage found', '-', '-', '-']);
-      console.log(UsageFormatter.eventLabel(event), 'no usage found', '-', '-', '-')
-    }
+    });
+
+    //console.log(table.toString()); ///////////////TABLE///////////////////////// 2
+  }
+
+  // Print total usage for each event.
+  // console.log('\n');
+  EVENTS.forEach(event => {
+    let totalBytes = 0;
+    let totalUsedBytes = 0;
+
+    const metrics = Array.from(stats.values());
+    const statsForEvent = metrics.map(eventStatsForUrl => {
+      const statsForEvent = eventStatsForUrl.filter(stat => stat.eventType === event)[0];
+      // TODO: need to sum max totalBytes. Currently ignores stats if event didn't
+      // have an entry. IOW, all total numerators should be max totalBytes seen for that event.
+      if (statsForEvent) {
+        totalBytes += statsForEvent.totalBytes;
+        totalUsedBytes += statsForEvent.usedBytes;
+      }
+    });
+
+    const percentUsed = Math.round(totalUsedBytes / totalBytes * 100);
+
+  // console.log(`Total used @ ${chalk.magenta(event)}: ${formatBytesToKB(totalUsedBytes)}/${formatBytesToKB(totalBytes)} (${percentUsed}%)`);
+    ///////////////Total used//////////////////////////////////////////////////////// 3
+    
   });
 
-  //console.log(table.toString()); ///////////////TABLE///////////////////////// 2
-}
+ // myFunction.createStringify(`${path_Details}/coverage_List.csv`, data, columns);
 
-// Print total usage for each event.
-// console.log('\n');
-EVENTS.forEach(event => {
-  let totalBytes = 0;
-  let totalUsedBytes = 0;
 
-  const metrics = Array.from(stats.values());
-  const statsForEvent = metrics.map(eventStatsForUrl => {
-    const statsForEvent = eventStatsForUrl.filter(stat => stat.eventType === event)[0];
-    // TODO: need to sum max totalBytes. Currently ignores stats if event didn't
-    // have an entry. IOW, all total numerators should be max totalBytes seen for that event.
-    if (statsForEvent) {
-      totalBytes += statsForEvent.totalBytes;
-      totalUsedBytes += statsForEvent.usedBytes;
-    }
-  });
+  
 
-  const percentUsed = Math.round(totalUsedBytes / totalBytes * 100);
+};
 
- // console.log(`Total used @ ${chalk.magenta(event)}: ${formatBytesToKB(totalUsedBytes)}/${formatBytesToKB(totalBytes)} (${percentUsed}%)`);
-   ///////////////Total used//////////////////////////////////////////////////////// 3
-});
-
-})();
+module.exports.runCoverage = runCoverage;

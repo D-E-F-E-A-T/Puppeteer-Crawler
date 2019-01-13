@@ -1,0 +1,19 @@
+EventType,used Bytes,Js Used,css Used,total Bytes,URL
+domcontentloaded,11269,6457,4812,29996,  https://www.chromestatus.com/features
+load,29677,9581,20096,45270,  https://www.chromestatus.com/features
+networkidle0,30587,10491,20096,45459,  https://www.chromestatus.com/features
+domcontentloaded,no usage found,-,-,-,https://www.chromestatus.com/static/elements/features-imports.vulcanize.js
+load,106560,106560,0,216639,  https://www.chromestatus.com/static/elements/features-imports.vulcanize.js
+networkidle0,111290,111290,0,216639,  https://www.chromestatus.com/static/elements/features-imports.vulcanize.js
+domcontentloaded,no usage found,-,-,-,https://www.google-analytics.com/analytics.js
+load,18485,18485,0,43710,  https://www.google-analytics.com/analytics.js
+networkidle0,19031,19031,0,43710,  https://www.google-analytics.com/analytics.js
+domcontentloaded,no usage found,-,-,-,https://www.gstatic.com/firebasejs/4.1.3/firebase-app.js
+load,6533,6533,0,18368,  https://www.gstatic.com/firebasejs/4.1.3/firebase-app.js
+networkidle0,6533,6533,0,18368,  https://www.gstatic.com/firebasejs/4.1.3/firebase-app.js
+domcontentloaded,no usage found,-,-,-,https://www.gstatic.com/firebasejs/4.1.3/firebase-messaging.js
+load,11760,11760,0,25459,  https://www.gstatic.com/firebasejs/4.1.3/firebase-messaging.js
+networkidle0,11760,11760,0,25459,  https://www.gstatic.com/firebasejs/4.1.3/firebase-messaging.js
+domcontentloaded,no usage found,-,-,-,https://www.chromestatus.com/static/elements/features-imports.vulcanize.html
+load,no usage found,-,-,-,https://www.chromestatus.com/static/elements/features-imports.vulcanize.html
+networkidle0,0,0,0,12898,  https://www.chromestatus.com/static/elements/features-imports.vulcanize.html
