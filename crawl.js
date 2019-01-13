@@ -56,17 +56,15 @@ async function createStringify(FILE, data)  {
 
       customCrawl: async (page, crawl) => {
 
-      const result = await crawl();
-      
-      result.evaluatet = await page.evaluate(() => {
-        let title = document.querySelector('h1').textContent;
+        const result = await crawl();
+        const featureArticle = (await page.$x('//title'))[0];
 
-          return {
-              title
-          }
-    });
+        result.evaluatet = await page.evaluate((el) => {
+        
+          return el.textContent;
+        }, featureArticle);
 
-      return result;
+        return result;
      
     },
     
