@@ -65,7 +65,6 @@ async function createStringify(FILE, data)  {
               title
           }
     });
-
       return result;
      
     },
