@@ -58,24 +58,31 @@ async function createStringify(FILE, data)  {
 
         const result = await crawl();
 
-        const $title = (await page.$x('//title'))[0];
-        const $h1 = (await page.$x('//h1'))[0];
-        const $h2 = (await page.$x('//h2'))[0];
-        const $h3 = (await page.$x('//h3'))[0];
+        const $title = (await page.$x("//title"))[0];
+        const $h1 = (await page.$x("//h1"))[0];
+        const $h2 = (await page.$x("//h2"))[0];
+        const $h3 = (await page.$x("//h3"))[0];
+        const $Canonical = (await page.$x("//link[@rel='canonical']/@href"))[0];        
+        const $MetaRobots = (await page.$x("//meta[@name='robots']/@content"))[0];           
+        const $MetaDescription  = (await page.$x("//meta[@name='description']/@content"))[0];        
 
-      
-          result.evaluate = await page.evaluate((title, h1, h2, h3) => {
-     
-            
+        try {
+          result.evaluate = await page.evaluate((title, h1, h2, h3, Canonical, MetaRobots, MetaDescription ) => {
+              
             return {
-              title: title ? title.textContent.trim() :  '--',
-              h1: h1  ? h1.textContent.trim() : '--',
-              h2: h2 ? h2.textContent.trim() : '--',
-              h3: h3 ? h3.textContent.trim() : '--',
+              title: title ? title.textContent.trim() : 'not found',
+              h1: h1  ? h1.textContent.trim() : 'not found',
+              h2: h2 ? h2.textContent.trim() : 'not found',
+              h3: h3 ? h3.textContent.trim() : 'not found',
+              Canonical: Canonical ? Canonical.textContent.trim() : 'not found',
+              MetaRobots: MetaRobots ? MetaRobots.textContent.trim() : 'not found',
+              MetaDescription : MetaDescription ? MetaDescription.textContent.trim() : 'not found',
             };
-          }, $title, $h1, $h2, $h3);
-
-
+          }, $title, $h1, $h2, $h3, $Canonical, $MetaRobots, $MetaDescription );
+        } catch (error) {
+          console.log(error.name, " error in crawl.js")
+        }
+     
         return result;
 
     },
