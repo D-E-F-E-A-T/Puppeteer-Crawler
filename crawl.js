@@ -3,10 +3,10 @@ const HCCrawler = require('headless-chrome-crawler');
 const fs = require('fs');
 const stringify = require("csv-stringify");
 
-const URL = 'http://www.wp.pl'
+const URL = 'http://www.onet.pl'
 
 
-const output = `${__dirname}/output`
+const output = `${__dirname}/output/${strin_split(URL)}`
 const path_Coverage_List = `${output}/Coverage_Detail_List`;
 const path_Features_List = `${output}/Features_Detail_List`;
 
@@ -15,7 +15,10 @@ const path_Features_List = `${output}/Features_Detail_List`;
 }
 create_Output() //just we need output on start :)
 
-function strin_split()
+function strin_split(URL) {
+  let our_Url = URL.split("/")[2]
+  return our_Url
+}
 
 const FILE = `${output}/crawler.csv`; //note ADD FOLDER LIKE WWW>WP>PL
 
