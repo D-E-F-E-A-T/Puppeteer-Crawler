@@ -10,7 +10,6 @@ const output = `${__dirname}/output/${strin_split(URL)}`
 const path_Coverage_List = `${output}/Coverage_Detail_List`;
 const path_Features_List = `${output}/Features_Detail_List`;
 
-const createStringify = require('./modules/stringify.js').createStringify;
 const coverageDetails = require('./modules/coverage.js').runCoverage;
 
  async function create_Output () {
@@ -52,6 +51,15 @@ async function mkdirSync(dirPath) {
         throw err;
       }
     }
+  }
+
+  async function createStringify(FILE, data, columns)  {
+    stringify(data, {header: true, columns: columns}, (err, output) => {
+      if(err) throw err;
+      fs.writeFileSync(FILE, output, 'utf8', (err) => {
+        if(err) throw err;
+      })
+    })
   }
 
 (async () => {
@@ -98,18 +106,18 @@ async function mkdirSync(dirPath) {
       console.log(result.response.url)
      // console.log(result.evaluate)
       data.push([
-        result.response.url.trim(),
+        result.response.url.replace(/\s+/g, ' '),
         result.response.status,
-        result.evaluate.title.trim(),
-        result.evaluate.h1.trim(),
-        result.evaluate.h2.trim(),
-        result.evaluate.h3.trim(),
-        result.evaluate.Canonical.trim(),
-        result.evaluate.MetaRobots.trim(),
-        result.evaluate.MetaDescription.trim(),     
+        result.evaluate.title.replace(/\s+/g, ' '),
+        result.evaluate.h1.replace(/\s+/g, ' '),
+        result.evaluate.h2.replace(/\s+/g, ' '),
+        result.evaluate.h3.replace(/\s+/g, ' '),
+        result.evaluate.Canonical.replace(/\s+/g, ' '),
+        result.evaluate.MetaRobots.replace(/\s+/g, ' '),
+        result.evaluate.MetaDescription.replace(/\s+/g, ' '),    
       ]);
-     await createStringify(FILE, data, columns)
-    await coverageDetails(result.response.url, path_Coverage_List, output)
+    await createStringify(FILE, data, columns)
+   // await coverageDetails(result.response.url, path_Coverage_List, output)
     },
     maxDepth: 3,
     maxConcurrency: 2

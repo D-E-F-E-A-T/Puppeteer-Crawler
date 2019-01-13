@@ -244,9 +244,9 @@ const runCoverage = async(URL, path_Details, output) => {
       mainData.push([uniqid, event, ` ${formatBytesToKB(totalUsedBytes)}/${formatBytesToKB(totalBytes)}`, `${percentUsed}%`, URL])
     });
 
-  myFunction.createStringify(`${path_Details}/coverage_List.csv`, data, columns);
+  myFunction.createStringify(`${path_Details}/${uniqid}.csv`, data, columns);
   data = []
-console.log(data)
+  console.log(data)
   myFunction.createStringify(`${output}/coverage_CSS_JS.csv`, mainData, columns2);
 
   
