@@ -57,12 +57,24 @@ async function createStringify(FILE, data)  {
       customCrawl: async (page, crawl) => {
 
         const result = await crawl();
-        const featureArticle = (await page.$x('//title'))[0];
 
-        result.evaluatet = await page.evaluate((el) => {
-        
-          return el.textContent;
-        }, featureArticle);
+        const $title = (await page.$x('//title'))[0];
+        const $h1 = (await page.$x('//h1'))[0];
+        const $h2 = (await page.$x('//h2'))[0];
+        const $h3 = (await page.$x('//h3'))[0];
+
+      
+          result.evaluate = await page.evaluate((title, h1, h2, h3) => {
+     
+            
+            return {
+              title: title ? title.textContent.trim() :  '--',
+              h1: h1  ? h1.textContent.trim() : '--',
+              h2: h2 ? h2.textContent.trim() : '--',
+              h3: h3 ? h3.textContent.trim() : '--',
+            };
+          }, $title, $h1, $h2, $h3);
+
 
         return result;
 
@@ -70,8 +82,8 @@ async function createStringify(FILE, data)  {
     
     onSuccess: async (result) => {
       console.log(result.response.url)
-     // console.log(result.page)
-     console.log(result.evaluatet)
+
+     console.log(result.evaluate)
       data.push([result.response.url]);
       await createStringify(FILE, data)
     
