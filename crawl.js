@@ -65,6 +65,12 @@ async function createStringify(FILE, data)  {
         }, featureArticle);
 
         return result;
+
+          return {
+              title
+          }
+    });
+      return result;
      
     },
     
