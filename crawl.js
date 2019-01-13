@@ -3,22 +3,33 @@ const HCCrawler = require('headless-chrome-crawler');
 const fs = require('fs');
 const stringify = require("csv-stringify");
 
-const URL = 'http://www.onet.pl'
+const URL = 'http://www.wp.pl'
+
 
 const output = `${__dirname}/output`
-const path_Coverage_List = `${__dirname}/output/Coverage_Detail_List`;
-const path_Features_List = `${__dirname}/output/Features_Detail_List`;
+const path_Coverage_List = `${output}/Coverage_Detail_List`;
+const path_Features_List = `${output}/Features_Detail_List`;
 
-const create_Output = async () => {
+ async function create_Output () {
     await mkdirSync(output)
 }
 create_Output() //just we need output on start :)
 
-const FILE = `${__dirname}/output/result2.csv`;
+function strin_split()
+
+const FILE = `${output}/crawler.csv`; //note ADD FOLDER LIKE WWW>WP>PL
 
 let data = []
 let columns = {
-  URL: 'URL'
+  URL: 'URL',
+  Status: 'Status',
+  Title: 'Title',
+  h1: 'h1',
+  h2: 'h2',
+  h3: 'h3',
+  Canonical: 'Canonical',
+  MetaRobots: 'MetaRobots',
+  MetaDescription: 'MetaDescription'
 };
 
 async function mkdirSync(dirPath) {
@@ -89,9 +100,18 @@ async function createStringify(FILE, data)  {
     
     onSuccess: async (result) => {
       console.log(result.response.url)
-
-     console.log(result.evaluate)
-      data.push([result.response.url]);
+     // console.log(result.evaluate)
+      data.push([
+        result.response.url,
+        result.response.status,
+        result.evaluate.title,
+        result.evaluate.h1,
+        result.evaluate.h2,
+        result.evaluate.h3,
+        result.evaluate.Canonical,
+        result.evaluate.MetaRobots,
+        result.evaluate.MetaDescription,     
+      ]);
       await createStringify(FILE, data)
     
     },
