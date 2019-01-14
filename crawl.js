@@ -44,7 +44,8 @@ let columns = {
 };
 let linksData = []
 let columnsLinks = {
-  URL: 'URL'
+  Target: 'Target',
+  Source: 'Source'
 }
 
 async function mkdirSync(dirPath) {
@@ -72,9 +73,9 @@ async function createStringify(FILE, data, columns, head)  {
   })
 }
 
-async function getUrlLinks(links, FILE, columns) {
+async function getUrlLinks(links, FILE, columns, source) {
   for(item of links) {
-    linksData.push([item])
+    linksData.push([source, item])
   }
   await createStringify(FILE, linksData, columns, false)
 }
@@ -102,13 +103,13 @@ async function getUrlLinks(links, FILE, columns) {
           result.evaluate = await page.evaluate((title, h1, h2, h3, Canonical, MetaRobots, MetaDescription ) => {
               
             return {
-              title: title ? title.textContent.trim() : 'not found',
-              h1: h1  ? h1.textContent.trim() : 'not found',
-              h2: h2 ? h2.textContent.trim() : 'not found',
-              h3: h3 ? h3.textContent.trim() : 'not found',
-              Canonical: Canonical ? Canonical.textContent.trim() : 'not found',
-              MetaRobots: MetaRobots ? MetaRobots.textContent.trim() : 'not found',
-              MetaDescription : MetaDescription ? MetaDescription.textContent.trim() : 'not found',
+              title: title ? title.textContent.trim() : ' ',
+              h1: h1  ? h1.textContent.trim() : ' ',
+              h2: h2 ? h2.textContent.trim() : ' ',
+              h3: h3 ? h3.textContent.trim() : ' ',
+              Canonical: Canonical ? Canonical.textContent.trim() : ' ',
+              MetaRobots: MetaRobots ? MetaRobots.textContent.trim() : ' ',
+              MetaDescription : MetaDescription ? MetaDescription.textContent.trim() : ' ',
             };
           }, $title, $h1, $h2, $h3, $Canonical, $MetaRobots, $MetaDescription );
         } catch (error) {
@@ -120,26 +121,31 @@ async function getUrlLinks(links, FILE, columns) {
     },
     
     onSuccess: async (result) => {
-      console.log(result.response.url)
-    //  console.log(result.links)
-     // console.log(result.evaluate)
-      data.push([
-        result.response.url.replace(/\s+/g, ' '),
-        result.response.status,
-        result.evaluate.title.replace(/\s+/g, ' '),
-        result.evaluate.h1.replace(/\s+/g, ' '),
-        result.evaluate.h2.replace(/\s+/g, ' '),
-        result.evaluate.h3.replace(/\s+/g, ' '),
-        result.evaluate.Canonical.replace(/\s+/g, ' '),
-        result.evaluate.MetaRobots.replace(/\s+/g, ' '),
-        result.evaluate.MetaDescription.replace(/\s+/g, ' '),    
-      ]);
-    await createStringify(FILE, data, columns, true)
-    await getUrlLinks(result.links, FullCrawler, columnsLinks)
-    await coverageDetails(result.response.url, path_Coverage_List, output)
-    await FeaturesDetails(result.response.url, path_Features_List, output)
+      try {
+        console.log(result.response.url)
+        //  console.log(result.links)
+         // console.log(result.evaluate)
+          data.push([
+            result.response.url.replace(/\s+/g, ' '),
+            result.response.status,
+            result.evaluate.title.replace(/\s+/g, ' '),
+            result.evaluate.h1.replace(/\s+/g, ' '),
+            result.evaluate.h2.replace(/\s+/g, ' '),
+            result.evaluate.h3.replace(/\s+/g, ' '),
+            result.evaluate.Canonical.replace(/\s+/g, ' '),
+            result.evaluate.MetaRobots.replace(/\s+/g, ' '),
+            result.evaluate.MetaDescription.replace(/\s+/g, ' '),    
+          ]);
+          await createStringify(FILE, data, columns, true)
+          await getUrlLinks(result.links, FullCrawler, columnsLinks, result.response.url)
+          await coverageDetails(result.response.url, path_Coverage_List, output)
+          await FeaturesDetails(result.response.url, path_Features_List, output)
+      } catch (error) {
+        console.log(error, ' err from xpath')
+      }
+  
     },
-    maxDepth: 2,
+    maxDepth: 3,
     maxConcurrency: 1,
     cache,
     persistCache: true
