@@ -11,7 +11,8 @@
     "fs": "0.0.1-security",
     "headless-chrome-crawler": "^1.8.0",
     "node-fetch": "^2.3.0",
-    "puppeteer": "^1.11.0"
+    "puppeteer": "^1.11.0",
+    "redis": "^2.8.0"
   },
   "devDependencies": {},
   "scripts": {
