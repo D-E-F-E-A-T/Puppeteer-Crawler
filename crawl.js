@@ -11,6 +11,7 @@ const path_Coverage_List = `${output}/Coverage_Detail_List`;
 const path_Features_List = `${output}/Features_Detail_List`;
 
 const coverageDetails = require('./modules/coverage.js').runCoverage;
+const FeaturesDetails = require('./modules/features.js').features;
 
  async function create_Output () {
     await mkdirSync(output)
@@ -23,19 +24,25 @@ function strin_split(URL) {
 }
 
 const FILE = `${output}/crawler.csv`; //note ADD FOLDER LIKE WWW>WP>PL
+const FullCrawler = `${output}/crawler_with_Childrens.csv`; 
+
 
 let data = []
 let columns = {
   URL: 'URL',
   Status: 'Status',
   Title: 'Title',
-  h1: 'h1',
-  h2: 'h2',
-  h3: 'h3',
+  h1: 'H1_1',
+  h2: 'H2_2',
+  h3: 'H3_3',
   Canonical: 'Canonical',
   MetaRobots: 'MetaRobots',
   MetaDescription: 'MetaDescription'
 };
+let linksData = []
+let columnsLinks = {
+  URL: 'URL'
+}
 
 async function mkdirSync(dirPath) {
     try {
@@ -51,15 +58,22 @@ async function mkdirSync(dirPath) {
         throw err;
       }
     }
-  }
+}
 
-async function createStringify(FILE, data, columns)  {
-  stringify(data, {header: true, columns: columns}, (err, output) => {
+async function createStringify(FILE, data, columns, head)  {
+  stringify(data, {header: head, columns: columns}, (err, output) => {
     if(err) throw err;
     fs.writeFileSync(FILE, output, 'utf8', (err) => {
       if(err) throw err;
     })
   })
+}
+
+async function getUrlLinks(links, FILE, columns) {
+  for(item of links) {
+    linksData.push([item])
+  }
+  await createStringify(FILE, linksData, columns, false)
 }
 
 (async () => {
@@ -104,6 +118,7 @@ async function createStringify(FILE, data, columns)  {
     
     onSuccess: async (result) => {
       console.log(result.response.url)
+    //  console.log(result.links)
      // console.log(result.evaluate)
       data.push([
         result.response.url.replace(/\s+/g, ' '),
@@ -116,8 +131,10 @@ async function createStringify(FILE, data, columns)  {
         result.evaluate.MetaRobots.replace(/\s+/g, ' '),
         result.evaluate.MetaDescription.replace(/\s+/g, ' '),    
       ]);
-    await createStringify(FILE, data, columns)
+    await createStringify(FILE, data, columns, true)
+    await getUrlLinks(result.links, FullCrawler, columnsLinks)
     await coverageDetails(result.response.url, path_Coverage_List, output)
+    await FeaturesDetails(result.response.url, path_Features_List, output)
     },
     maxDepth: 2,
     maxConcurrency: 1

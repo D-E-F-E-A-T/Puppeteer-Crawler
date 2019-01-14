@@ -144,9 +144,8 @@ const runCoverage = async(URL, path_Details, output) => {
     URL: 'URL'
   };
 
-
   for (const [url, vals] of stats) {
-    console.log('\n' + chalk.cyan(url)); ///////////////////////////4 LINKS //////////////////////////////
+    //console.log('\n' + chalk.cyan(url)); ///////////////////////////4 LINKS //////////////////////////////
 
     const table = new Table({
       // chars: {mid: '', 'left-mid': '', 'mid-mid': '', 'right-mid': ''},
@@ -161,9 +160,6 @@ const runCoverage = async(URL, path_Details, output) => {
       style: {head: ['white'], border: ['grey']}
       // colWidths: [20, 20]
     });
-
-
- 
 
     EVENTS.forEach(event => {
       const usageForEvent = vals.filter(val => val.eventType === event);
@@ -181,13 +177,13 @@ const runCoverage = async(URL, path_Details, output) => {
             formatter.shortSummary(stats.cssUsed),
             formatter.summary()
           ]);*/
-          console.log(
+        /*  console.log(
             chalk.magenta(UsageFormatter.eventLabel(stats.eventType)), '|||',
             //  formatter.barGraph(),'|||',
               formatter.shortSummary(stats.jsUsed),'|||', // !== 0 ? `${formatBytesToKB(stats.jsUsed)}KB` : 0,
               formatter.shortSummary(stats.cssUsed),'|||',
               formatter.summary()
-          )
+          )*/
           data.push([
             UsageFormatter.eventLabel(stats.eventType),
             `${usageForEvent[0].usedBytes}`,
@@ -199,7 +195,7 @@ const runCoverage = async(URL, path_Details, output) => {
         }
       } else {
         //table.push([UsageFormatter.eventLabel(event), 'no usage found', '-', '-', '-']);
-        console.log(chalk.magenta(UsageFormatter.eventLabel(event)), 'no usage found', '-', '-', '-')
+       // console.log(chalk.magenta(UsageFormatter.eventLabel(event)), 'no usage found', '-', '-', '-')
         data.push([UsageFormatter.eventLabel(event), 'no usage found', '-', '-', '-', `${url}`]);
       }
     });
@@ -277,7 +273,8 @@ const runCoverage = async(URL, path_Details, output) => {
     myFunction.createStringify(`${path_Details}/${uniqid}.csv`, data, columns);
     data = []
     stats.clear()
-    console.log(data)
+  // console.log(data)
+  console.log('Coverage END')
    
 };
 
