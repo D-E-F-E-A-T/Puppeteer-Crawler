@@ -3,7 +3,7 @@ const HCCrawler = require('headless-chrome-crawler');
 const fs = require('fs');
 const stringify = require("csv-stringify");
 
-const URL = 'http://www.onet.pl'
+const URL = 'http://www.wp.pl'
 
 
 const output = `${__dirname}/output/${strin_split(URL)}`
@@ -53,14 +53,14 @@ async function mkdirSync(dirPath) {
     }
   }
 
-  async function createStringify(FILE, data, columns)  {
-    stringify(data, {header: true, columns: columns}, (err, output) => {
+async function createStringify(FILE, data, columns)  {
+  stringify(data, {header: true, columns: columns}, (err, output) => {
+    if(err) throw err;
+    fs.writeFileSync(FILE, output, 'utf8', (err) => {
       if(err) throw err;
-      fs.writeFileSync(FILE, output, 'utf8', (err) => {
-        if(err) throw err;
-      })
     })
-  }
+  })
+}
 
 (async () => {
 
@@ -117,14 +117,14 @@ async function mkdirSync(dirPath) {
         result.evaluate.MetaDescription.replace(/\s+/g, ' '),    
       ]);
     await createStringify(FILE, data, columns)
-   // await coverageDetails(result.response.url, path_Coverage_List, output)
+    await coverageDetails(result.response.url, path_Coverage_List, output)
     },
-    maxDepth: 3,
-    maxConcurrency: 2
+    maxDepth: 2,
+    maxConcurrency: 1
   });
 
   crawler.queue(URL);
-// crawler.queue('http://www.wp.pl');
+//crawler.queue('http://www.wp.pl');
   await crawler.onIdle();
   await crawler.close();
 })();

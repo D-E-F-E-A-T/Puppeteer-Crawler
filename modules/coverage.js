@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const chalk = require('chalk');
 const Table = require('cli-table');
-
+const fs = require('fs')
 //const URL = process.env.URL || 'https://www.chromestatus.com/features';
 
 const stringify = require('csv-stringify');
@@ -242,15 +242,43 @@ const runCoverage = async(URL, path_Details, output) => {
 
     
       mainData.push([uniqid, event, ` ${formatBytesToKB(totalUsedBytes)}/${formatBytesToKB(totalBytes)}`, `${percentUsed}%`, URL])
+    
     });
+   
+    //myFunction.createStringify(`${output}/coverage_CSS_JS.csv`, mainData, columns2);
 
-  myFunction.createStringify(`${path_Details}/${uniqid}.csv`, data, columns);
-  data = []
-  console.log(data)
-  myFunction.createStringify(`${output}/coverage_CSS_JS.csv`, mainData, columns2);
+    let dithPath = `${output}/coverage_CSS_JS.csv`;
 
-  
+    try {
+      if (!fs.existsSync(dithPath)) {
 
+          stringify(mainData, {header: true, columns: columns2}, (err, output) => {
+            if(err) throw err;
+            fs.writeFileSync(dithPath, output, 'utf8', (err) => {
+              if(err) throw err;
+            })
+          })
+        
+      } else {
+
+        stringify(mainData, {header: false, columns: columns2}, (err, output) => {
+          if(err) throw err;
+          fs.appendFileSync(dithPath, output, 'utf8', (err) => {
+            if(err) throw err;
+          })
+        })
+      
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+        
+    myFunction.createStringify(`${path_Details}/${uniqid}.csv`, data, columns);
+    data = []
+    stats.clear()
+    console.log(data)
+   
 };
 
 module.exports.runCoverage = runCoverage;
