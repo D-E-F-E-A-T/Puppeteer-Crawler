@@ -16,6 +16,8 @@ async function handleErrors(flag, name, message) {
     } catch (error) {
         console.log(error.name,':', error.message, '|| from: printErrors.js')
        // await handleErrors(flag, name)
+        await handleErrors(true, error.name, error.message)
+
     }
 }
 
@@ -27,7 +29,7 @@ async function printError(flag, columns, data) {
             fs.mkdirSync(dirPath)
             flag = true
         } 
-        console.log(flag)
+       // console.log(flag)
         stringify(data, {header: flag, columns: columns}, (err, output) => {
             if(err) throw err;
             fs.appendFileSync(`${dirPath}/errors.csv`, output, 'utf8', (err) => {
@@ -36,6 +38,7 @@ async function printError(flag, columns, data) {
         })
     } catch (error) {
         console.log(error.name,':', error.message, '|| from: printErrors.js')
+        await handleErrors(true, error.name, error.message)
     }
 
 }
