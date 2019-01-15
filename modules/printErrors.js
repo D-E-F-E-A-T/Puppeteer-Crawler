@@ -1,14 +1,15 @@
 const fs = require('fs');
 const stringify = require('csv-stringify');
 
-async function handleErrors(flag, name) {
+async function handleErrors(flag, name, message) {
     try {
         
         let data = [];
         let columns = {
-          name: 'name'   
+          name: 'Error name',
+          message: 'Error message'   
         }
-        data.push([name])
+        data.push([name, message])
 
         await printError(flag, columns, data)
 
@@ -19,41 +20,26 @@ async function handleErrors(flag, name) {
 }
 
 async function printError(flag, columns, data) {
-
-
-
-    stringify(data, {header: flag, columns: columns}, (err, output) => {
-        if(err) throw err;
-        fs.appendFileSync('./errors.csv', output, 'utf8', (err) => {
-            if (err) throw err;
-        })
-    })
-}
-
-async function mkdirSync(dirPath) {
+    let dirPath = '../errors'
+    flag = false
     try {
         if(!fs.existsSync(dirPath)) {
             fs.mkdirSync(dirPath)
-        }
+            flag = true
+        } 
+        console.log(flag)
+        stringify(data, {header: flag, columns: columns}, (err, output) => {
+            if(err) throw err;
+            fs.appendFileSync(`${dirPath}/errors.csv`, output, 'utf8', (err) => {
+                if (err) throw err;
+            })
+        })
     } catch (error) {
-        
+        console.log(error.name,':', error.message, '|| from: printErrors.js')
     }
+
 }
 
-async function mkdirSync(dirPath) {
-    try {
-      dirPath.split('/').reduce((parentPath, dirName) => {
-        const currentPath = parentPath + dirName;
-        if (!fs.existsSync(currentPath)) {
-          fs.mkdirSync(currentPath);
-        }
-        return currentPath + '/';
-      }, '');
-    } catch (err) {
-      if (err.name !== 'EEXIST') {
-        throw err;
-      }
-    }
-}
+
 
 module.exports.handleErrors = handleErrors;
