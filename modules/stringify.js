@@ -2,7 +2,7 @@ const stringify = require("csv-stringify");
 const fs = require('fs');
 
 async function createStringify(FILE, data, columns)  {
-  console.log('give me answear')
+
   try {
     if(!fs.existsSync(FILE)) {
       const dataEmpty = []

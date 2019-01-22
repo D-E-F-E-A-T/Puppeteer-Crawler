@@ -142,7 +142,7 @@ async function getUrlLinks(links, FILE, columns, source) {
             result.evaluate.MetaDescription.replace(/\s+/g, ' '),    
           ]);
          // await createStringify(FILE, data, columns, true)
-         console.log('URL:', result.response.url)
+         // console.log('URL:', result.response.url)
           await stringufyFunction(FILE, [data[data.length - 1]], columns)
           await getUrlLinks(result.links, FullCrawler, columnsLinks, result.response.url)
           await coverageDetails(result.response.url, path_Coverage_List, output)

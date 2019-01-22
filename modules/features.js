@@ -4,6 +4,7 @@ const puppeteer = require('puppeteer');
 const fetch = require('node-fetch');
 const chalk = require('chalk');
 const caniuseDB = require('caniuse-db/data.json').data;
+const stringufyFunction = require('./stringify').createStringify;
 
 //const url = process.env.URL || 'https://www.chromestatus.com/features';
 
@@ -304,6 +305,8 @@ async function features(url, path_Details, outputMain) { //URL, path_Details, ou
         console.log('');
         await browser.close();
 
+        /*
+
         stringify(dataDetails, {header: true, columns: columns2}, (err, output) => {
           if (err) throw err
     
@@ -314,17 +317,22 @@ async function features(url, path_Details, outputMain) { //URL, path_Details, ou
           })
         })
 
+*/
 
         data.push([uniqid, lengthF.length, url])
 
-        stringify(data, {header: true, columns: columns}, (err, output) => {
+        await stringufyFunction(`${outputMain}/features.csv`, data, columns)
+
+        lengthF = []
+
+      /*  stringify(data, {header: true, columns: columns}, (err, output) => {
           if (err) throw err
           
           fs.writeFileSync(`${outputMain}/features.csv`, output, 'utf8', (err) => {
               if (err) throw err
               lengthF = []
           })
-        })
+        })*/
     
     
       } catch (error) {
