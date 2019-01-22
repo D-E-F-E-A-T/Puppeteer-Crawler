@@ -9,7 +9,7 @@ const RedisCache = require('headless-chrome-crawler/cache/redis');
 
 const cache = new RedisCache({ host: '127.0.0.1', port: 6379 });
 
-const URL = 'http://www.wp.pl';
+const URL = 'http://www.onet.pl';
 
 const output = `${__dirname}/output/${strin_split(URL)}`
 const path_Coverage_List = `${output}/Coverage_Detail_List`;
@@ -29,7 +29,7 @@ function strin_split(URL) {
 }
 
 const FILE = `${output}/crawler.csv`; //note ADD FOLDER LIKE WWW>WP>PL
-const FullCrawler = `${output}/crawler_with_Childrens.csv`; 
+const FullCrawler = `${output}/All_links_for_single_url.csv`; 
 
 
 let data = []
@@ -79,7 +79,10 @@ async function getUrlLinks(links, FILE, columns, source) {
   for(item of links) {
     linksData.push([source, item])
   }
-  await createStringify(FILE, linksData, columns, false)
+ 
+  //await createStringify(FILE, linksData, columns, false)
+  await stringufyFunction(FILE, linksData , columns)
+  linksData = []
 }
 
 (async () => {
@@ -139,7 +142,6 @@ async function getUrlLinks(links, FILE, columns, source) {
             result.evaluate.MetaDescription.replace(/\s+/g, ' '),    
           ]);
          // await createStringify(FILE, data, columns, true)
-         console.log('brak me awn', data)
          console.log('URL:', result.response.url)
           await stringufyFunction(FILE, [data[data.length - 1]], columns)
           await getUrlLinks(result.links, FullCrawler, columnsLinks, result.response.url)
@@ -153,7 +155,7 @@ async function getUrlLinks(links, FILE, columns, source) {
     maxDepth: 3,
     maxConcurrency: 1,
     cache,
-    //persistCache: true
+    persistCache: true
   });
 
   crawler.queue(URL);

@@ -6,7 +6,7 @@ const fs = require('fs')
 
 const stringify = require('csv-stringify');
 
-const myFunction = require('./stringify');
+const stringufyFunction = require('./stringify').createStringify;
 
 const EVENTS = [
   'domcontentloaded',
@@ -244,7 +244,7 @@ const runCoverage = async(URL, path_Details, output) => {
     //myFunction.createStringify(`${output}/coverage_CSS_JS.csv`, mainData, columns2);
 
     let dithPath = `${output}/coverage_CSS_JS.csv`;
-
+/*
     try {
       if (!fs.existsSync(dithPath)) {
 
@@ -269,9 +269,12 @@ const runCoverage = async(URL, path_Details, output) => {
     } catch (error) {
       console.log(error)
     }
-        
+*/
+    await stringufyFunction(dithPath, mainData, columns)
 
-    //myFunction.createStringify(`${path_Details}/${uniqid}.csv`, data, columns);
+        //console.log(data)
+    //stringufyFunction(`${path_Details}/${uniqid}.csv`, data, columns);
+    await stringufyFunction(`${path_Details}/${uniqid}.csv`, data, columns)
     data = []
     stats.clear()
   // console.log(data)

@@ -5,13 +5,11 @@ async function createStringify(FILE, data, columns)  {
   console.log('give me answear')
   try {
     if(!fs.existsSync(FILE)) {
-      console.log(FILE)
-      await stringifyPrint(data, columns, true, FILE)
-      console.log('first IF')
+      const dataEmpty = []
+      dataEmpty.push([''])
+      await stringifyPrint(dataEmpty, columns, true, FILE)
     }
-
    // await stringifyPrint(data, columns, false, FILE)
-    console.log('second IF')
     stringify(data, {header: false, columns: columns}, (err, output) => {
       if(err) throw err;
       
