@@ -270,7 +270,8 @@ const runCoverage = async(URL, path_Details, output) => {
       console.log(error)
     }
         
-    myFunction.createStringify(`${path_Details}/${uniqid}.csv`, data, columns);
+
+    //myFunction.createStringify(`${path_Details}/${uniqid}.csv`, data, columns);
     data = []
     stats.clear()
   // console.log(data)

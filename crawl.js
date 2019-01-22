@@ -3,6 +3,8 @@ const HCCrawler = require('headless-chrome-crawler');
 const fs = require('fs');
 const stringify = require("csv-stringify");
 
+const stringufyFunction = require("./modules/stringify").createStringify;
+
 const RedisCache = require('headless-chrome-crawler/cache/redis');
 
 const cache = new RedisCache({ host: '127.0.0.1', port: 6379 });
@@ -136,7 +138,10 @@ async function getUrlLinks(links, FILE, columns, source) {
             result.evaluate.MetaRobots.replace(/\s+/g, ' '),
             result.evaluate.MetaDescription.replace(/\s+/g, ' '),    
           ]);
-          await createStringify(FILE, data, columns, true)
+         // await createStringify(FILE, data, columns, true)
+         console.log('brak me awn', data)
+         console.log('URL:', result.response.url)
+          await stringufyFunction(FILE, [data[data.length - 1]], columns)
           await getUrlLinks(result.links, FullCrawler, columnsLinks, result.response.url)
           await coverageDetails(result.response.url, path_Coverage_List, output)
           await FeaturesDetails(result.response.url, path_Features_List, output)
@@ -148,7 +153,7 @@ async function getUrlLinks(links, FILE, columns, source) {
     maxDepth: 3,
     maxConcurrency: 1,
     cache,
-    persistCache: true
+    //persistCache: true
   });
 
   crawler.queue(URL);
