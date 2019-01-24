@@ -1,8 +1,8 @@
 
 # The installation process
 
-1. copy repository
-2. npm install
+1. copy repository with command: git clone https://github.com/tobiasz18/new_Crawl.git || or download zip
+2. type in terminal: npm install
 3. install reddis date base:
  * if you using windows download from : https://github.com/MicrosoftArchive/redis/releases
 
