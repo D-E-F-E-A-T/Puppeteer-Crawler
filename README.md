@@ -81,7 +81,7 @@
 
 ## what if you want to stop the crawler and start again 
 
-1. Stop crowling , you can use crlt-c
+1. Stop crowling , you can use ctrl-c
 2. change file name in output: example www.onet.pl to onet.pl
 3. clear data base:
  * open redis-cli file and write command:  flushall
