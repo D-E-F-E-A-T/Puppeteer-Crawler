@@ -41,7 +41,7 @@
 ## output 
 
 
-![output](https://i.ibb.co/T8fzMKV/output.jpg)
+![Example output](https://i.ibb.co/T8fzMKV/output.jpg)
 
 ### files 
 * www.onet.pl 
