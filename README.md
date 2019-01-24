@@ -20,7 +20,7 @@
 ## Getting Started / How to run on windows
 
 1. run redis-server from the file you downloaded(Redis-x64-3.2.100)
-2. choice your url from crawl.js || URL variable 
+2. choice your url in crawl.js || URL variable 
 3. clear your data base:
 
  * run redis-cli from the file you downloaded(Redis-x64-3.2.100) 
