@@ -145,7 +145,7 @@ const runCoverage = async(URL, path_Details, output) => {
   };
 
   for (const [url, vals] of stats) {
-    //console.log('\n' + chalk.cyan(url)); ///////////////////////////4 LINKS //////////////////////////////
+    //console.log('\n' + chalk.cyan(url));
 
     const table = new Table({
       // chars: {mid: '', 'left-mid': '', 'mid-mid': '', 'right-mid': ''},
@@ -200,7 +200,6 @@ const runCoverage = async(URL, path_Details, output) => {
       }
     });
 
-    //console.log(table.toString()); ///////////////TABLE///////////////////////// 2
     }
 
 
@@ -234,7 +233,7 @@ const runCoverage = async(URL, path_Details, output) => {
       const percentUsed = Math.round(totalUsedBytes / totalBytes * 100);
 
     // console.log(`Total used @ ${chalk.magenta(event)}: ${formatBytesToKB(totalUsedBytes)}/${formatBytesToKB(totalBytes)} (${percentUsed}%)`);
-      ///////////////Total used//////////////////////////////////////////////////////// 3
+     
 
     
       mainData.push([uniqid, event, ` ${formatBytesToKB(totalUsedBytes)}/${formatBytesToKB(totalBytes)}`, `${percentUsed}%`, URL])

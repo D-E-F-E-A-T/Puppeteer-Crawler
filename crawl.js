@@ -18,6 +18,8 @@ const path_Features_List = `${output}/Features_Detail_List`;
 const coverageDetails = require('./modules/coverage.js').runCoverage;
 const FeaturesDetails = require('./modules/features.js').features;
 
+const errorsHandle = require('./modules/printErrors.js').handleErrors;
+
  async function create_Output () {
     await mkdirSync(output)
 }
@@ -61,11 +63,12 @@ async function mkdirSync(dirPath) {
       }, '');
     } catch (err) {
       if (err.name !== 'EEXIST') {
-        throw err;
+        errorsHandle(true, error.name, error.message) //flag, name, message = parametrs
+        console.log(error.name,':', error.message, '|| from: mkdirSync fun || crawler.js')
       }
     }
 }
-
+/*
 async function createStringify(FILE, data, columns, head)  {
   stringify(data, {header: head, columns: columns}, (err, output) => {
     if(err) throw err;
@@ -74,7 +77,7 @@ async function createStringify(FILE, data, columns, head)  {
     })
   })
 }
-
+*/
 async function getUrlLinks(links, FILE, columns, source) {
   for(item of links) {
     linksData.push([source, item])
@@ -117,8 +120,9 @@ async function getUrlLinks(links, FILE, columns, source) {
               MetaDescription : MetaDescription ? MetaDescription.textContent.trim() : ' ',
             };
           }, $title, $h1, $h2, $h3, $Canonical, $MetaRobots, $MetaDescription );
-        } catch (error) {
-          console.log(error.name, " error in crawl.js")
+        } catch (error) {        
+          console.log(error.name,':', error.message, '|| from: crawler fun || crawler.js')
+          errorsHandle(true, error.name, error.message) 
         }
      
         return result;
@@ -147,8 +151,9 @@ async function getUrlLinks(links, FILE, columns, source) {
           await getUrlLinks(result.links, FullCrawler, columnsLinks, result.response.url)
           await coverageDetails(result.response.url, path_Coverage_List, output)
           await FeaturesDetails(result.response.url, path_Features_List, output)
-      } catch (error) {
-        console.log(error, ' err from xpath')
+      } catch (error) { 
+        console.log(error.name,':', error.message, '|| from onSuccess fun || crawler.js')
+        errorsHandle(true, error.name, error.message) //flag, name, message = parametrs
       }
   
     },
