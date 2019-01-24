@@ -287,9 +287,6 @@ async function features(url, path_Details, outputMain) { //URL, path_Details, ou
           JS: 'JS'
         };
 
-      /*  for (const [id, feature] of allFeaturesUsed) {   
-          printFeatureName(feature);       
-        }*/
 
         for (item of lengthF) {
             //console.log( item.name, item.css)
@@ -304,40 +301,17 @@ async function features(url, path_Details, outputMain) { //URL, path_Details, ou
         
         console.log('');
         await browser.close();
-
-      /*
-
-        stringify(dataDetails, {header: true, columns: columns2}, (err, output) => {
-          if (err) throw err
-    
-          fs.writeFile(`${path_Details}/${uniqid}.csv`, output, 'utf8', (err) => {
-              if (err) throw err
-              dataDetails = [];
-              lengthF = [];
-          })
-        })
-        
-      */
+                      // save main data to csv 
         data.push([uniqid, lengthF.length, url])
 
         await stringufyFunction(`${outputMain}/features.csv`, data, columns)
 
         data = []
-
-      /*  stringify(data, {header: true, columns: columns}, (err, output) => {
-          if (err) throw err
-          
-          fs.writeFileSync(`${outputMain}/features.csv`, output, 'utf8', (err) => {
-              if (err) throw err
-              lengthF = []
-          })
-        })*/
-    
+                 // save data details to csv 
         await stringufyFunction(`${path_Details}/${uniqid}.csv`, dataDetails, columns2)
      
-        console.log(dataDetails.length)
         dataDetails = [];
-        console.log(lengthF.length)
+    
 
       } catch (error) {
         console.log(error.name , 'features')
