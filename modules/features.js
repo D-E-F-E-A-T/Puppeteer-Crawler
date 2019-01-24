@@ -280,7 +280,7 @@ async function features(url, path_Details, outputMain) { //URL, path_Details, ou
             lengthF.push(feature)
           }
         }
-
+        console.log(lengthF.length)
         let columns2 = {
           Features: 'Features not supported',
           CSS: 'CSS',
@@ -316,14 +316,12 @@ async function features(url, path_Details, outputMain) { //URL, path_Details, ou
               lengthF = [];
           })
         })
-
 */
-
         data.push([uniqid, lengthF.length, url])
 
         await stringufyFunction(`${outputMain}/features.csv`, data, columns)
 
-        lengthF = []
+        data = []
 
       /*  stringify(data, {header: true, columns: columns}, (err, output) => {
           if (err) throw err
