@@ -5,8 +5,9 @@ const fs = require('fs')
 //const URL = process.env.URL || 'https://www.chromestatus.com/features';
 
 const stringify = require('csv-stringify');
-
 const stringufyFunction = require('./stringify').createStringify;
+const errorsHandle = require('./printErrors.js').handleErrors;
+
 
 const EVENTS = [
   'domcontentloaded',
@@ -111,7 +112,10 @@ async function collectCoverage(URL) {
       page.coverage.startCSSCoverage()
     ]);
 
-    await page.goto(URL, {waitUntil: event});
+    await page.goto(URL, {waitUntil: event}).catch(error => {
+      console.log(error.name,':', error.message, '|| from navigation || coverage.js')
+      errorsHandle(true, error.name, error.message) //flag, name, message = parametrs
+    });
     // await page.waitForNavigation({waitUntil: event});
 
     const [jsCoverage, cssCoverage] = await Promise.all([
@@ -234,8 +238,6 @@ const runCoverage = async(URL, path_Details, output) => {
 
     // console.log(`Total used @ ${chalk.magenta(event)}: ${formatBytesToKB(totalUsedBytes)}/${formatBytesToKB(totalBytes)} (${percentUsed}%)`);
      
-
-    
       mainData.push([uniqid, event, ` ${formatBytesToKB(totalUsedBytes)}/${formatBytesToKB(totalBytes)}`, `${percentUsed}%`, URL])
     
     });
