@@ -9,7 +9,7 @@ const RedisCache = require('headless-chrome-crawler/cache/redis');
 
 const cache = new RedisCache({ host: '127.0.0.1', port: 6379 });
 
-const URL = 'http://www.onet.pl';
+const URL = 'http://www.wp.pl';
 
 const output = `${__dirname}/output/${strin_split(URL)}`
 const path_Coverage_List = `${output}/Coverage_Detail_List`;

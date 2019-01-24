@@ -43,6 +43,41 @@
 
 ![output](https://i.ibb.co/T8fzMKV/output.jpg)
 
+### files 
+* www.onet.pl 
+    ```bash  
+      The name of the file that we take from the URL variable
+
+    ```
+
+* Coverage_Detail_List
+    ```  
+       Test lazy loading strategy by seeing CSS/JS code coverage usage across page load for single 
+       page from coverage_CSS_JS
+    ```   
+* Features_Detail_List
+    ```  
+        shows a name of unsupported features by chrome version 41
+    ``` 
+
+* All_links_for_single_url
+    ```  
+        Like in name file, we taking all chilldrens from page who are crawled
+    ``` 
+* coverage_CSS_JS
+    ```  
+    general data 
+    ``` 
+* crawler
+    ```  
+    URL's main list 
+
+    ``` 
+* features
+    ```  
+    shows a number (length) of unsupported features by chrome version 41
+    ```         
+
 ## what if you want to stop the crawler and start again 
 
 1. Stop crowling , you can use crlt-c
