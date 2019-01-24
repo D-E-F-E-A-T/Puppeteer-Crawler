@@ -38,7 +38,7 @@
   npm run test
 ```
 
-## output 
+## Example output 
 
 
 ![Example output](https://i.ibb.co/T8fzMKV/output.jpg)
