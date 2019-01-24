@@ -241,43 +241,16 @@ const runCoverage = async(URL, path_Details, output) => {
     
     });
    
-    //myFunction.createStringify(`${output}/coverage_CSS_JS.csv`, mainData, columns2);
-
+    
     let dithPath = `${output}/coverage_CSS_JS.csv`;
-/*
-    try {
-      if (!fs.existsSync(dithPath)) {
 
-          stringify(mainData, {header: true, columns: columns2}, (err, output) => {
-            if(err) throw err;
-            fs.writeFileSync(dithPath, output, 'utf8', (err) => {
-              if(err) throw err;
-            })
-          })
-        
-      } else {
+    await stringufyFunction(dithPath, mainData, columns) //save to csv main datas
 
-        stringify(mainData, {header: false, columns: columns2}, (err, output) => {
-          if(err) throw err;
-          fs.appendFileSync(dithPath, output, 'utf8', (err) => {
-            if(err) throw err;
-          })
-        })
-      
-      }
 
-    } catch (error) {
-      console.log(error)
-    }
-*/
-    await stringufyFunction(dithPath, mainData, columns)
-
-        //console.log(data)
-    //stringufyFunction(`${path_Details}/${uniqid}.csv`, data, columns);
-    await stringufyFunction(`${path_Details}/${uniqid}.csv`, data, columns)
+    await stringufyFunction(`${path_Details}/${uniqid}.csv`, data, columns) //save to csv details datas
     data = []
     stats.clear()
-  // console.log(data)
+    // console.log(data)
   console.log('Coverage END')
    
 };
