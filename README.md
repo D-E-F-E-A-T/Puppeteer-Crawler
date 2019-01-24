@@ -40,7 +40,8 @@
 
 ## output 
 
-![output](https://ibb.co/tsGypZ7)
+
+![output](https://i.ibb.co/T8fzMKV/output.jpg)
 
 ## what if you want to stop the crawler and start again 
 
