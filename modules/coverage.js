@@ -241,18 +241,23 @@ const runCoverage = async(URL, path_Details, output) => {
       mainData.push([uniqid, event, ` ${formatBytesToKB(totalUsedBytes)}/${formatBytesToKB(totalBytes)}`, `${percentUsed}%`, URL])
     
     });
-   
     
-    let dithPath = `${output}/coverage_CSS_JS.csv`;
+    try {
+      let dithPath = `${output}/coverage_CSS_JS.csv`;
 
-    await stringufyFunction(dithPath, mainData, columns) //save to csv main datas
-
-
-    await stringufyFunction(`${path_Details}/${uniqid}.csv`, data, columns) //save to csv details datas
-    data = []
-    stats.clear()
-    // console.log(data)
-  console.log('Coverage END')
+      await stringufyFunction(dithPath, mainData, columns) //save to csv main datas
+  
+      await stringufyFunction(`${path_Details}/${uniqid}.csv`, data, columns) //save to csv details datas
+      data = []
+      stats.clear()
+      // console.log(data)
+    } catch (error) {
+      console.log(error.name,':', error.message, '|| from save to csv || coverage.js')
+      errorsHandle(true, error.name, error.message) //flag, name, message = parametrs
+    }
+    
+   
+  console.log('Coverage done')
    
 };
 

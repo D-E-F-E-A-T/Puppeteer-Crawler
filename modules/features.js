@@ -6,6 +6,9 @@ const chalk = require('chalk');
 const caniuseDB = require('caniuse-db/data.json').data;
 const stringufyFunction = require('./stringify').createStringify;
 
+
+const errorsHandle = require('./printErrors.js').handleErrors; //our error nadle funcion
+
 //const url = process.env.URL || 'https://www.chromestatus.com/features';
 
 const GOOGLE_SEARCH_CHROME_VERSION = process.env.CHROME_VERSION || 41;
@@ -177,7 +180,10 @@ async function collectFeatureTraceEvents(browser, url) {
     ],
   });
   console.log(chalk.cyan(`Navigating to ${url}`));
-  await page.goto(url, {waitUntil: 'networkidle2'}).catch(err => console.log('error Features:', err))
+  await page.goto(url, {waitUntil: 'networkidle2'}).catch(error => {
+    console.log(error.name,':', error.message, '|| from navigation || features.js')
+    errorsHandle(true, error.name, error.message) //flag, name, message = parametrs
+  });
   //console.log(chalk.cyan(`Waiting for page to be idle...`));
   await page.waitFor(5000); // add a little more time in case other features are used.
   const trace = JSON.parse(await page.tracing.stop());
@@ -246,8 +252,6 @@ async function features(url, path_Details, outputMain) { //URL, path_Details, ou
       fetchCSSFeatureToNameMapping(),
       collectFeatureTraceEvents(browser, url),
     ]);
-
-      try {
         
         const usage = traceEvents.reduce((usage, e) => {
           if (!(e.name in usage)) {
@@ -302,20 +306,25 @@ async function features(url, path_Details, outputMain) { //URL, path_Details, ou
         console.log('');
         await browser.close();
                       // save main data to csv 
+
+
         data.push([uniqid, lengthF.length, url])
 
-        await stringufyFunction(`${outputMain}/features.csv`, data, columns)
+        try {
+          await stringufyFunction(`${outputMain}/features.csv`, data, columns)
 
-        data = []
-                 // save data details to csv 
-        await stringufyFunction(`${path_Details}/${uniqid}.csv`, dataDetails, columns2)
-     
-        dataDetails = [];
-    
+          data = []
+                   // save data details to csv 
+          await stringufyFunction(`${path_Details}/${uniqid}.csv`, dataDetails, columns2)
+       
+          dataDetails = [];   
 
-      } catch (error) {
-        console.log(error.name , 'features')
-      }
+        } catch (error) {
+
+           console.log(error.name,':', error.message, '|| from save to csv || features.js')
+           errorsHandle(true, error.name, error.message) //flag, name, message = parametrs
+    }
+   
 }
 
 module.exports.features = features;

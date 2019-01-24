@@ -9,7 +9,7 @@ async function test() {
       
     }
     catch(err) {
-        await errorHandle(true, err.name, err.message)
+         errorHandle(true, err.name, err.message)
     }
   }
 
