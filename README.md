@@ -53,11 +53,12 @@
 * Coverage_Detail_List
     ```  
        Test lazy loading strategy by seeing CSS/JS code coverage usage across page load for single 
-       page from coverage_CSS_JS
+       url coverage_CSS_JS
     ```   
 * Features_Detail_List
     ```  
-        shows a name of unsupported features by chrome version 41
+        shows a name of unsupported features by chrome version 41 for single 
+       url from features
     ``` 
 
 * All_links_for_single_url
