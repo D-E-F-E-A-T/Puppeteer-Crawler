@@ -1,15 +1,16 @@
 const fs = require('fs');
 const stringify = require('csv-stringify');
 
-async function handleErrors(flag, name, message) {
+async function handleErrors(flag, name, message, url) {
     try {
         
         let data = [];
         let columns = {
           name: 'Error name',
-          message: 'Error message'   
+          message: 'Error message', 
+          url: 'URL'  
         }
-        data.push([name, message])
+        data.push([name, message, url])
 
         await printError(flag, columns, data)
 

@@ -52,7 +52,7 @@ let columnsLinks = {
   Source: 'Source'
 }
 
-async function mkdirSync(dirPath) {
+async function mkdirSync(dirPath, url) {
     try {
       dirPath.split('/').reduce((parentPath, dirName) => {
         const currentPath = parentPath + dirName;
@@ -153,7 +153,7 @@ async function getUrlLinks(links, FILE, columns, source) {
           await FeaturesDetails(result.response.url, path_Features_List, output)
       } catch (error) { 
         console.log(error.name,':', error.message, '|| from onSuccess fun || crawler.js')
-        errorsHandle(true, error.name, error.message) //flag, name, message = parametrs
+        errorsHandle(true, error.name, error.message, result.response.url) //flag, name, message = parametrs
       }
   
     },

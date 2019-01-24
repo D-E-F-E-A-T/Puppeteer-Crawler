@@ -182,7 +182,7 @@ async function collectFeatureTraceEvents(browser, url) {
   console.log(chalk.cyan(`Navigating to ${url}`));
   await page.goto(url, {waitUntil: 'networkidle2'}).catch(error => {
     console.log(error.name,':', error.message, '|| from navigation || features.js')
-    errorsHandle(true, error.name, error.message) //flag, name, message = parametrs
+    errorsHandle(true, error.name, error.message, url) //flag, name, message = parametrs
   });
   //console.log(chalk.cyan(`Waiting for page to be idle...`));
   await page.waitFor(5000); // add a little more time in case other features are used.
@@ -322,7 +322,7 @@ async function features(url, path_Details, outputMain) { //URL, path_Details, ou
         } catch (error) {
 
            console.log(error.name,':', error.message, '|| from save to csv || features.js')
-           errorsHandle(true, error.name, error.message) //flag, name, message = parametrs
+           errorsHandle(true, error.name, error.message, url) //flag, name, message = parametrs
     }
    
 }

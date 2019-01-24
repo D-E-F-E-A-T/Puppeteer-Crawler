@@ -114,7 +114,7 @@ async function collectCoverage(URL) {
 
     await page.goto(URL, {waitUntil: event}).catch(error => {
       console.log(error.name,':', error.message, '|| from navigation || coverage.js')
-      errorsHandle(true, error.name, error.message) //flag, name, message = parametrs
+      errorsHandle(true, error.name, error.message, URL) //flag, name, message = parametrs
     });
     // await page.waitForNavigation({waitUntil: event});
 
@@ -253,7 +253,7 @@ const runCoverage = async(URL, path_Details, output) => {
       // console.log(data)
     } catch (error) {
       console.log(error.name,':', error.message, '|| from save to csv || coverage.js')
-      errorsHandle(true, error.name, error.message) //flag, name, message = parametrs
+      errorsHandle(true, error.name, error.message, URL) //flag, name, message = parametrs
     }
     
    
