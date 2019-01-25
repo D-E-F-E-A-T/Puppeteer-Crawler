@@ -9,7 +9,7 @@ const RedisCache = require('headless-chrome-crawler/cache/redis');
 
 const cache = new RedisCache({ host: '127.0.0.1', port: 6379 });
 
-const URL = 'http://www.wp.pl';
+const URL = 'http://www.kwejk.pl';
 
 const output = `${__dirname}/output/${strin_split(URL)}`
 const path_Coverage_List = `${output}/Coverage_Detail_List`;
@@ -68,16 +68,7 @@ async function mkdirSync(dirPath, url) {
       }
     }
 }
-/*
-async function createStringify(FILE, data, columns, head)  {
-  stringify(data, {header: head, columns: columns}, (err, output) => {
-    if(err) throw err;
-    fs.writeFileSync(FILE, output, 'utf8', (err) => {
-      if(err) throw err;
-    })
-  })
-}
-*/
+
 async function getUrlLinks(links, FILE, columns, source) {
   for(item of links) {
     linksData.push([source, item])
@@ -164,7 +155,7 @@ async function getUrlLinks(links, FILE, columns, source) {
   });
 
   crawler.queue(URL);
-//crawler.queue('http://www.wp.pl');
+  //crawler.queue('http://www.wp.pl');
   await crawler.onIdle();
   await crawler.close();
 })();

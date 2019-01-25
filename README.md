@@ -25,6 +25,7 @@
 
  * run redis-cli from the file you downloaded(Redis-x64-3.2.100) 
  * type command - flushall 
+ * when redis-server is running type in redis-cli ctrl + c to delete monitoring to debugging
 
 4. type in your terminal to start:
 
