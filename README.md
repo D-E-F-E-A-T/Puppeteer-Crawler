@@ -38,6 +38,11 @@
   ```bash  
   npm run test
 ```
+* All errors are saved in the file:
+
+  ```bash  
+     ./errors/errors.csv
+    ```
 
 ## Example output 
 
@@ -90,7 +95,10 @@
    ```bash
     node crawl
     ```  
+## Possible problems ( NOTE )
 
+ * Remember that redis-cli file can turn on monitoring(debugger) and then your database will stop. To resume database work click ctrl-c
+ 
 
 ## Built With
 * [GoogleChromeLabs](https://github.com/GoogleChromeLabs/puppeteer-examples) 
