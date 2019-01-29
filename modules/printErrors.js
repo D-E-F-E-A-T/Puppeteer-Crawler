@@ -23,7 +23,7 @@ async function handleErrors(flag, name, message, url) {
 }
 
 async function printError(flag, columns, data) {
-    let dirPath = '../errors'
+    let dirPath = './errors'
     flag = false
     try {
         if(!fs.existsSync(dirPath)) {
