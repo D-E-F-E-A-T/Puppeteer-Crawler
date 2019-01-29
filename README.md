@@ -95,9 +95,7 @@
    ```bash
     node crawl
     ```  
-## Possible problems ( NOTE )
 
- * Remember that redis-cli file can turn on monitoring(debugger) and then your database will stop. To resume database work click ctrl-c
  
 
 ## Built With
