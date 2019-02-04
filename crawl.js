@@ -20,6 +20,9 @@ const FeaturesDetails = require('./modules/features.js').features;
 
 const errorsHandle = require('./modules/printErrors.js').handleErrors;
 
+var csvWriter = require('csv-write-stream');
+var writer = csvWriter({sendHeaders: false});
+
  async function create_Output () {
     await mkdirSync(output)
 }
@@ -77,6 +80,51 @@ async function getUrlLinks(links, FILE, columns, source) {
   //await createStringify(FILE, linksData, columns, false)
   await stringufyFunction(FILE, linksData , columns)
   linksData = []
+}
+
+async function getCrawlerUrl(FILE, data, columns) {
+  if (!fs.existsSync(FILE)) {
+    writer = csvWriter({sendHeaders: false});
+    writer.pipe(fs.createWriteStream(FILE));
+    writer.write(columns);
+    writer.end();
+  } 
+  
+  // Append some data to CSV the file    
+  writer = csvWriter({sendHeaders: false});
+  writer.pipe(fs.createWriteStream(FILE, {flags: 'a'}));
+  writer.write({
+    URL: data[1],
+    Status: data[2],
+    Title: data[3],
+    h1: data[4],
+    h2: data[5],
+    h3: data[6],
+    Canonical: data[7],
+    MetaRobots: data[8],
+    MetaDescription: data[9],
+  });
+
+  writer = csvWriter({sendHeaders: false});
+  writer.pipe(fs.createWriteStream(FILE, {flags: 'a'}));
+  writer.write({
+   header1: '2019-01-01',
+    header2: 'Jones',
+     header3: 'Bob'
+});
+
+writer = csvWriter({sendHeaders: false});
+writer.pipe(fs.createWriteStream(FILE, {flags: 'a'}));
+writer.write({
+  header1: '2019-0dasdsad1-01',
+  header2: 'Joneadsasds',
+  header3: 'Bobasddsa'
+});
+
+
+  writer.end();
+
+  console.log('endo')
 }
 
 (async () => {
@@ -138,10 +186,11 @@ async function getUrlLinks(links, FILE, columns, source) {
           ]);
          // await createStringify(FILE, data, columns, true)
          // console.log('URL:', result.response.url)
-          await stringufyFunction(FILE, [data[data.length - 1]], columns)
-          await getUrlLinks(result.links, FullCrawler, columnsLinks, result.response.url)
-          await coverageDetails(result.response.url, path_Coverage_List, output)
-          await FeaturesDetails(result.response.url, path_Features_List, output)
+         // await stringufyFunction(FILE, [data[data.length - 1]], columns)
+         await getCrawlerUrl(FILE, [data[data.length - 1]], columns)
+         // await getUrlLinks(result.links, FullCrawler, columnsLinks, result.response.url)
+        //  await coverageDetails(result.response.url, path_Coverage_List, output)
+       //   await FeaturesDetails(result.response.url, path_Features_List, output)
       } catch (error) { 
         console.log(error.name,':', error.message, '|| from onSuccess fun || crawler.js')
         errorsHandle(true, error.name, error.message, result.response.url) //flag, name, message = parametrs
