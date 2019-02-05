@@ -3,15 +3,22 @@
 const tags = require("./modules/tags.js");
 const performance = require("./modules/performance.js");
 const manipulate = require("./modules/manipulate.js");
-
+const fs = require('fs')
 
 
 async function processFile(Metrics, url, output) {
-  let browser, page, stream;
+    let browser, page, stream; 
 
-    stream = await manipulate.initializeWriteStream(output);
+    let csvFilename = `${output}\\Times.txt`;
+
+    if (!fs.existsSync(csvFilename)) {
+      stream = await manipulate.initializeWriteStream(output);
+      stream.write("URL TTFB trueTTFB indexable(noJS) indexable(js) canonicalised(nojs) canonicalised(js) canonicaltags(nojs) canonicaltags(js) robotsTags(nojs) robotstags(js)\n");
+    } else {
+      stream = await manipulate.initializeWriteStream(output);
+    }
+
     [browser, page] = await manipulate.initializeBrowser();
-    stream.write("URL TTFB trueTTFB indexable(noJS) indexable(js) canonicalised(nojs) canonicalised(js) canonicaltags(nojs) canonicaltags(js) robotsTags(nojs) robotstags(js)\n");
 
     try {
       await page.goto(url, {

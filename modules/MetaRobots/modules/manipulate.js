@@ -13,36 +13,33 @@ exports.initializeBrowser = function initializeBrowser() {
   });
 };
 
-exports.writeResults = function writeResults(stream, Metrics, output) {
-  var csvFilename = `${output}\\Times.txt`
-  if (fs.existsSync(csvFilename)) {
+exports.writeResults = function writeResults(stream, Metrics) {
+
     stream.write(Metrics.url);
     stream.write(" ");
-  }
- 
-  //Performance metrics
-  for (let key in Metrics.performance) {
-    stream.write(Metrics.performance[key].toString());
-    stream.write(" ");
-  }
-  //Indexability status
-  for (let key in Metrics.indexability) {
-    stream.write(Metrics.indexability[key].toString());
-    stream.write(" ");
-  }
-  //Canonicalization status
-  for (let key in Metrics.canonicalization) {
-    stream.write(Metrics.canonicalization[key].toString());
-    stream.write(" ");
-  }
-  //Number of tags With and Without JavaScript
-  for (let key in Metrics.numberOfTags) {
-    stream.write(Metrics.numberOfTags[key].toString());
-    stream.write(" ");
-  }
- 
-  stream.write("\n");
- 
+  
+    //Performance metrics
+    for (let key in Metrics.performance) {
+      stream.write(Metrics.performance[key].toString());
+      stream.write(" ");
+    }
+    //Indexability status
+    for (let key in Metrics.indexability) {
+      stream.write(Metrics.indexability[key].toString());
+      stream.write(" ");
+    }
+    //Canonicalization status
+    for (let key in Metrics.canonicalization) {
+      stream.write(Metrics.canonicalization[key].toString());
+      stream.write(" ");
+    }
+    //Number of tags With and Without JavaScript
+    for (let key in Metrics.numberOfTags) {
+      stream.write(Metrics.numberOfTags[key].toString());
+      stream.write(" ");
+    }
+   
+    stream.write("\n");
 };
 
 exports.initializeWriteStream = function initializeWriteStream(output) {
