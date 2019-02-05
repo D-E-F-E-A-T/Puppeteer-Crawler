@@ -42,7 +42,7 @@ exports.writeResults = function writeResults(stream, Metrics) {
 };
 
 exports.initializeWriteStream = function initializeWriteStream() {
-  return fs.createWriteStream(".\\Czasy.txt", {
+  return fs.createWriteStream(".\\Output\\Czasy.txt", {
     flags: "a",
     encoding: "utf8"
   });

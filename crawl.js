@@ -2,23 +2,20 @@ const HCCrawler = require('headless-chrome-crawler');
 //const CSVExporter = require('headless-chrome-crawler/exporter/csv');
 const fs = require('fs');
 const stringify = require("csv-stringify");
-
 const stringufyFunction = require("./modules/stringify").createStringify;
+const coverageDetails = require('./modules/coverage.js').runCoverage;
+const FeaturesDetails = require('./modules/features.js').features;
+const errorsHandle = require('./modules/printErrors.js').handleErrors;
+const metaRobots = require('./modules/MetaRobots/metaRobots.js').processFile;
 
 const RedisCache = require('headless-chrome-crawler/cache/redis');
-
 const cache = new RedisCache({ host: '127.0.0.1', port: 6379 });
 
 const URL = 'http://www.besty.pl';
-
 const output = `${__dirname}/output/${strin_split(URL)}`
 const path_Coverage_List = `${output}/Coverage_Detail_List`;
 const path_Features_List = `${output}/Features_Detail_List`;
 
-const coverageDetails = require('./modules/coverage.js').runCoverage;
-const FeaturesDetails = require('./modules/features.js').features;
-
-const errorsHandle = require('./modules/printErrors.js').handleErrors;
 
  async function create_Output () {
     await mkdirSync(output)
@@ -32,7 +29,6 @@ function strin_split(URL) {
 
 const FILE = `${output}/crawler.csv`; //note ADD FOLDER LIKE WWW>WP>PL
 const FullCrawler = `${output}/All_links_for_single_url.csv`; 
-
 
 let data = []
 let columns = {
@@ -51,6 +47,34 @@ let columnsLinks = {
   Target: 'Target',
   Source: 'Source'
 }
+
+let Metrics = {
+  url: "",
+  performance: {
+    TTFB: "",
+    trueTTFB: "",
+  },
+  indexability: {
+    withoutJavascript: "",
+    withJavaScript: "",
+  },    
+  canonicalization: {
+    withoutJavaScript: "",
+    withJavaScript: "",
+  },
+  numberOfTags: {
+    canonicalsWithoutJavaScirpt: "",
+    canonicalsWithJavaScirpt: "",
+    robotsWithoutJavaScript: "",
+    robotsWithJavaScriptS: ""
+  },
+  Lists: {
+    canonicalsWithoutJavaScript: "",
+    canonicalsWithJavaScript: "",
+    robotsWithoutJavaScript: "",
+    robotsWithJavaScript: ""
+  } 
+};
 
 async function mkdirSync(dirPath, url) {
     try {
@@ -142,14 +166,15 @@ async function getUrlLinks(links, FILE, columns, source) {
           await getUrlLinks(result.links, FullCrawler, columnsLinks, result.response.url)
           await coverageDetails(result.response.url, path_Coverage_List, output)
           await FeaturesDetails(result.response.url, path_Features_List, output)
+          await metaRobots(Metrics, result.response.url)
       } catch (error) { 
         console.log(error.name,':', error.message, '|| from onSuccess fun || crawler.js')
         errorsHandle(true, error.name, error.message, result.response.url) //flag, name, message = parametrs
       }
   
     },
-    maxDepth: 3,
-    maxConcurrency: 2,
+    maxDepth: 4,
+    maxConcurrency: 1,
     cache,
     persistCache: true
   });

@@ -1,36 +1,10 @@
 "use strict";
 //const LineByLineReader = require("line-by-line");
-const tags = require("./tags.js");
-const performance = require("./performance.js");
-const manipulate = require("./manipulate.js");
+const tags = require("./modules/tags.js");
+const performance = require("./modules/performance.js");
+const manipulate = require("./modules/manipulate.js");
 
-let Metrics = {
-    url: "",
-    performance: {
-      TTFB: "",
-      trueTTFB: "",
-    },
-    indexability: {
-      withoutJavascript: "",
-      withJavaScript: "",
-    },    
-    canonicalization: {
-      withoutJavaScript: "",
-      withJavaScript: "",
-    },
-    numberOfTags: {
-      canonicalsWithoutJavaScirpt: "",
-      canonicalsWithJavaScirpt: "",
-      robotsWithoutJavaScript: "",
-      robotsWithJavaScriptS: ""
-    },
-    Lists: {
-      canonicalsWithoutJavaScript: "",
-      canonicalsWithJavaScript: "",
-      robotsWithoutJavaScript: "",
-      robotsWithJavaScript: ""
-    } 
-};
+
 
 async function processFile(Metrics, url) {
   let browser, page, stream;
