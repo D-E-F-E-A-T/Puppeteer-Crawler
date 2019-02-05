@@ -1,4 +1,4 @@
-const stringify = require('csv-stringify');
+//const stringify = require('csv-stringify');
 const fs = require('fs');
 const puppeteer = require('puppeteer');
 const fetch = require('node-fetch');
@@ -12,7 +12,6 @@ const errorsHandle = require('./printErrors.js').handleErrors; //our error nadle
 //const url = process.env.URL || 'https://www.chromestatus.com/features';
 
 const GOOGLE_SEARCH_CHROME_VERSION = process.env.CHROME_VERSION || 41;
-var currentPath = process.cwd();
 
 const BlinkFeatureNameToCaniuseName = {
   AddEventListenerPassiveTrue: 'passive-event-listener',

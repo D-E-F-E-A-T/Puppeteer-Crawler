@@ -1,6 +1,3 @@
-/*const puppeteer = require("puppeteer");
-const URL = "http://botbenchmarking.com/marcin/noindex/";*/
-
 exports.extractRobotsTag = async function extractRobotsTag(page) {
   let xpath = await page.$x("//meta[@name='robots']/@content");
   let list = new Array();

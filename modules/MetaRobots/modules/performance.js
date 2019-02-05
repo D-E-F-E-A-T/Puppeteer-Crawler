@@ -1,4 +1,3 @@
-//const puppeteer = require("puppeteer");
 
 function evaluatePerformance(page) {
     try {
