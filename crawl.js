@@ -149,7 +149,7 @@ async function getUrlLinks(links, FILE, columns, source) {
   
     },
     maxDepth: 3,
-    maxConcurrency: 1,
+    maxConcurrency: 2,
     cache,
     persistCache: true
   });
