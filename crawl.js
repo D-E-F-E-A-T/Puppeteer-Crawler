@@ -166,7 +166,7 @@ async function getUrlLinks(links, FILE, columns, source) {
           await getUrlLinks(result.links, FullCrawler, columnsLinks, result.response.url)
           await coverageDetails(result.response.url, path_Coverage_List, output)
           await FeaturesDetails(result.response.url, path_Features_List, output)
-          await metaRobots(Metrics, result.response.url)
+       //   await metaRobots(Metrics, result.response.url, output)
       } catch (error) { 
         console.log(error.name,':', error.message, '|| from onSuccess fun || crawler.js')
         errorsHandle(true, error.name, error.message, result.response.url) //flag, name, message = parametrs

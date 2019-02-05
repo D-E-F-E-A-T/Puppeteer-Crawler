@@ -13,9 +13,13 @@ exports.initializeBrowser = function initializeBrowser() {
   });
 };
 
-exports.writeResults = function writeResults(stream, Metrics) {
-  stream.write(Metrics.url);
-  stream.write(" ");
+exports.writeResults = function writeResults(stream, Metrics, output) {
+  var csvFilename = `${output}\\Times.txt`
+  if (fs.existsSync(csvFilename)) {
+    stream.write(Metrics.url);
+    stream.write(" ");
+  }
+ 
   //Performance metrics
   for (let key in Metrics.performance) {
     stream.write(Metrics.performance[key].toString());
@@ -41,8 +45,8 @@ exports.writeResults = function writeResults(stream, Metrics) {
  
 };
 
-exports.initializeWriteStream = function initializeWriteStream() {
-  return fs.createWriteStream(".\\Output\\Czasy.txt", {
+exports.initializeWriteStream = function initializeWriteStream(output) {
+  return fs.createWriteStream(`${output}\\Times.txt`, {
     flags: "a",
     encoding: "utf8"
   });

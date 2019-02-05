@@ -6,10 +6,10 @@ const manipulate = require("./modules/manipulate.js");
 
 
 
-async function processFile(Metrics, url) {
+async function processFile(Metrics, url, output) {
   let browser, page, stream;
 
-    stream = await manipulate.initializeWriteStream();
+    stream = await manipulate.initializeWriteStream(output);
     [browser, page] = await manipulate.initializeBrowser();
     stream.write("URL TTFB trueTTFB indexable(noJS) indexable(js) canonicalised(nojs) canonicalised(js) canonicaltags(nojs) canonicaltags(js) robotsTags(nojs) robotstags(js)\n");
 
@@ -47,8 +47,8 @@ async function processFile(Metrics, url) {
     Metrics.numberOfTags.robotsWithoutJavaScript = Metrics.Lists.robotsWithoutJavaScript.length;
     Metrics.indexability.withoutJavascript = tags.isIndexable(Metrics.Lists.robotsWithoutJavaScript);
 
-    console.log(Metrics);
-    manipulate.writeResults(stream, Metrics);
+    console.log('Meta Robots done');
+    manipulate.writeResults(stream, Metrics, output);
 
     //Restart browser (because of persistent connection for TTFB measurements)
     await browser.close();
