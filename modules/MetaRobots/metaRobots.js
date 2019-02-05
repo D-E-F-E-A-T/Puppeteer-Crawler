@@ -9,9 +9,9 @@ const fs = require('fs')
 async function processFile(Metrics, url, output) {
     let browser, page, stream; 
 
-    let csvFilename = `${output}\\Times.txt`;
+    let Filename = `${output}\\Times.txt`;
 
-    if (!fs.existsSync(csvFilename)) {
+    if (!fs.existsSync(Filename)) {
       stream = await manipulate.initializeWriteStream(output);
       stream.write("URL TTFB trueTTFB indexable(noJS) indexable(js) canonicalised(nojs) canonicalised(js) canonicaltags(nojs) canonicaltags(js) robotsTags(nojs) robotstags(js)\n");
     } else {
